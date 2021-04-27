@@ -5,48 +5,43 @@ import Router from 'vue-router';
 import login from '@/views/login';
 // 首页
 import index from '@/views/index';
+
 /**
- * 基础菜单
+ * 基础管理
  */
-// 商品管理
-import Goods from '@/views/goods/Goods';
-// 机器信息管理
-import Machine from '@/views/machine/Machine';
-// 货道信息管理
-import MachineAisle from '@/views/machine/MachineAisle';
+
+// 设备管理
+import device from '@/views/base/device';
+
+// 设备管理
+import info from '@/views/base/info';
+
+
 /**
- * 订单管理
+ * 设备中心
  */
-// 交易订单
-import Order from '@/views/pay/Order';
+
+// 实时监控
+import realTime from '@/views/play/realTime';
+
+// 监控回放
+import replay from '@/views/play/replay';
+
+// 监控回放文件
+import replayFile from '@/views/play/replayFile';
+
 /**
  * 系统管理
  */
+
 // 用户管理
 import user from '@/views/system/user';
-// 菜单管理
-import Module from '@/views/system/Module';
-// 角色管理
-import Role from '@/views/system/Role';
-// 公司管理
-import Dept from '@/views/system/Dept';
-// 系统环境变量
-import Variable from '@/views/system/Variable';
-// 权限管理
-import Permission from '@/views/system/Permission';
-/**
- * 支付管理
- */
-// 支付配置信息
-import MachineConfig from '@/views/machine/MachineConfig';
-// 支付配置
-import Config from '@/views/pay/Config';
-/**
- * 数据监控
- */
-// 监控查询
-import druidLogin from '@/views/druid/login';
 
+// 角色管理
+import role from '@/views/system/role';
+
+// 权限管理
+import permission from '@/views/system/permission';
 
 // 启用路由
 Vue.use(Router);
@@ -74,94 +69,67 @@ export default new Router({
         name: '首页',
         component: index,
         iconCls: 'el-icon-tickets',
-        children: [{
-            path: '/goods/Goods',
-            name: '商品管理',
-            component: Goods,
+        children: [
+        {
+            path: '/base/device',
+            name: '设备管理',
+            component: device,
             meta: {
                 requireAuth: true
             }
-        }, {
-            path: '/machine/Machine',
-            name: '机器信息管理',
-            component: Machine,
+        },
+        {
+            path: '/base/info',
+            name: '个人中心',
+            component: info,
             meta: {
                 requireAuth: true
             }
-        }, {
-            path: '/machine/MachineAisle',
-            name: '货道信息管理',
-            component: MachineAisle,
+        },
+        {
+            path: '/play/realTime',
+            name: '实时监控',
+            component: realTime,
             meta: {
                 requireAuth: true
             }
-        }, {
-            path: '/pay/Order',
-            name: '交易订单',
-            component: Order,
+        },
+        {
+            path: '/play/replay',
+            name: '监控回放',
+            component: replay,
             meta: {
                 requireAuth: true
             }
-        }, {
+        },
+        {
+            path: '/play/replayFile',
+            name: '回放文件',
+            component: replayFile,
+            meta: {
+                requireAuth: true
+            }
+        }, 
+        {
             path: '/system/user',
             name: '用户管理',
             component: user,
             meta: {
                 requireAuth: true
             }
-        }, {
-            path: '/system/Module',
-            name: '菜单管理',
-            component: Module,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/system/Role',
+        },
+        {
+            path: '/system/role',
             name: '角色管理',
-            component: Role,
+            component: role,
             meta: {
                 requireAuth: true
             }
-        }, {
-            path: '/system/Dept',
-            name: '公司管理',
-            component: Dept,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/system/Variable',
-            name: '系统环境变量',
-            component: Variable,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/system/Permission',
+        },
+        {
+            path: '/system/permission',
             name: '权限管理',
-            component: Permission,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/machine/MachineConfig',
-            name: '支付配置信息',
-            component: MachineConfig,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/pay/Config',
-            name: '支付配置',
-            component: Config,
-            meta: {
-                requireAuth: true
-            }
-        }, {
-            path: '/druid/login',
-            name: '监控查询',
-            component: druidLogin,
+            component: permission,
             meta: {
                 requireAuth: true
             }

@@ -26,7 +26,8 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-import { login } from '../api/userMG'
+// import { login } from '../api/userMG'
+import { getCodeAPI, loginAPI } from '../api/request'
 import { setCookie, getCookie, delCookie } from '../utils/util'
 import md5 from 'js-md5'
 export default {
@@ -79,41 +80,46 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.logining = true
-          // 测试通道，不为空直接登录
-          setTimeout(() => {
-            this.logining = false
-            this.$store.commit('login', 'true')
-            this.$router.push({ path: '/goods/Goods' })
-          }, 1000)
+          // this.logining = true
+          // // 测试通道，不为空直接登录
+          // setTimeout(() => {
+          //   this.logining = false
+          //   this.$store.commit('login', 'true')
+          //   this.$router.push({ path: '/goods/Goods' })
+          // }, 1000)
           // 注释
-          // login(this.ruleForm).then(res => {
-          //   if (res.success) {
-          //     if (this.rememberpwd) {
-          //       //保存帐号到cookie，有效期7天
-          //       setCookie('user', this.ruleForm.username, 7)
-          //       //保存密码到cookie，有效期7天
-          //       setCookie('pwd', this.ruleForm.password, 7)
-          //     } else {
-          //       delCookie('user')
-          //       delCookie('pwd')
-          //     }
-          //     //如果请求成功就让他2秒跳转路由
-          //     setTimeout(() => {
-          //       this.logining = false
-          //       // 缓存token
-          //       localStorage.setItem('logintoken', res.data.token)
-          //       // 缓存用户个人信息
-          //       localStorage.setItem('userdata', JSON.stringify(res.data))
-          //       this.$store.commit('login', 'true')
-          //       this.$router.push({ path: '/goods/Goods' })
-          //     }, 1000)
-          //   } else {
-          //     this.$message.error(res.msg)
-          //     this.logining = false
-          //     return false
-          //   }
-          // })
+          loginAPI({
+            username: this.ruleForm.username,
+            password: this.ruleForm.password,
+            code: this.ruleForm.code
+          }).then(res => {
+            if (res.code == 0) {
+              if (this.rememberpwd) {
+                //保存帐号到cookie，有效期7天
+                setCookie('user', this.ruleForm.username, 7)
+                //保存密码到cookie，有效期7天
+                setCookie('pwd', this.ruleForm.password, 7)
+              } else {
+                delCookie('user')
+                delCookie('pwd')
+              }
+              //如果请求成功就让他2秒跳转路由
+              setTimeout(() => {
+                this.logining = false
+                // 缓存token
+                localStorage.setItem('login_token', res.data.accessToken)
+                // 缓存用户个人信息
+                localStorage.setItem('userdata', JSON.stringify(res.data.user))
+                this.$store.commit('login', 'true')
+                this.$router.push({ path: '/base/device' })
+              }, 1000)
+            } else {
+              this.$message.error(res.msg)
+              this.getcode()
+              this.logining = false
+              return false
+            }
+          })
         } else {
           // 获取图形验证码
           this.getcode()
@@ -123,6 +129,11 @@ export default {
         }
       })
     },
+    getcode(){
+      getCodeAPI().then( res => {
+        this.ruleForm.codeimg = res.data
+      });
+    }
   }
 }
 </script>

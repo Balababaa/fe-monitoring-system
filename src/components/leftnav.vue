@@ -8,12 +8,12 @@
     </div>
     <el-submenu v-for="menu in allmenu" :key="menu.menuid" :index="menu.menuname">
       <template slot="title">
-        <i class="iconfont" :class="menu.icon"></i>
+        <!-- <i class="iconfont" :class="menu.icon"></i> -->
         <span>{{menu.menuname}}</span>
       </template>
       <el-menu-item-group>
         <el-menu-item v-for="chmenu in menu.menus" :index="'/'+chmenu.url" :key="chmenu.menuid">
-          <i class="iconfont" :class="chmenu.icon"></i>
+          <!-- <i class="iconfont" :class="chmenu.icon"></i> -->
           <span>{{chmenu.menuname}}</span>
         </el-menu-item>
       </el-menu-item-group>
@@ -44,28 +44,42 @@ export default {
           url: null,
           menus: [
             {
-              menuid: 2,
-              icon: 'icon-cat-skuQuery',
-              menuname: '商品管理',
+              menuid: 11,
+              icon: 'el-icon-video-camera',
+              menuname: '设备管理',
               hasThird: 'N',
-              url: 'goods/Goods',
+              url: 'base/device',
+              menus: null
+            },{
+              menuid: 12,
+              icon: 'el-icon-video-camera',
+              menuname: '个人中心',
+              hasThird: 'N',
+              url: 'base/info',
               menus: null
             }
           ]
         },
         {
-          menuid: 33,
+          menuid: 2,
           icon: 'li-icon-dingdanguanli',
-          menuname: '订单管理',
+          menuname: '设备中心',
           hasThird: null,
           url: null,
           menus: [
             {
-              menuid: 34,
-              icon: 'icon-order-manage',
-              menuname: '交易订单',
+              menuid: 21,
+              icon: 'el-icon-video-camera',
+              menuname: '实时监控',
               hasThird: 'N',
-              url: 'pay/Order',
+              url: 'play/realTime',
+              menus: null
+            }, {
+              menuid: 22,
+              icon: 'el-icon-video-camera',
+              menuname: '监控回放',
+              hasThird: 'N',
+              url: 'play/replay',
               menus: null
             }
           ]
@@ -86,35 +100,11 @@ export default {
               menus: null
             },
             {
-              menuid: 174,
-              icon: 'icon-cms-manage',
-              menuname: '菜单管理',
-              hasThird: 'N',
-              url: 'system/Module',
-              menus: null
-            },
-            {
               menuid: 73,
               icon: 'icon-news-manage',
               menuname: '角色管理',
               hasThird: 'N',
-              url: 'system/Role',
-              menus: null
-            },
-            {
-              menuid: 74,
-              icon: 'icon-cs-manage',
-              menuname: '公司管理',
-              hasThird: 'N',
-              url: 'system/Dept',
-              menus: null
-            },
-            {
-              menuid: 75,
-              icon: 'icon-promotion-manage',
-              menuname: '系统环境变量',
-              hasThird: 'N',
-              url: 'system/Variable',
+              url: 'system/role',
               menus: null
             },
             {
@@ -122,32 +112,7 @@ export default {
               icon: 'icon-cms-manage',
               menuname: '权限管理',
               hasThird: 'N',
-              url: 'system/Permission',
-              menus: null
-            }
-          ]
-        },
-        {
-          menuid: 128,
-          icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',
-          menuname: '支付管理',
-          hasThird: null,
-          url: null,
-          menus: [
-            {
-              menuid: 129,
-              icon: 'icon-provider-manage',
-              menuname: '支付配置信息',
-              hasThird: 'N',
-              url: 'machine/MachineConfig',
-              menus: null
-            },
-            {
-              menuid: 175,
-              icon: 'icon-provider-manage',
-              menuname: '支付配置',
-              hasThird: 'N',
-              url: 'pay/Config',
+              url: 'system/permission',
               menus: null
             }
           ]
