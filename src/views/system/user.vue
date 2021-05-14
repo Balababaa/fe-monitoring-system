@@ -20,29 +20,27 @@
     </el-form>
     <!--列表-->
     <el-table size="small" @selection-change="selectChange" :data="userData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
-      <el-table-column align="center" type="selection" width="50">
-      </el-table-column>
       <el-table-column align="center"  prop="uid" label="UID" width="150">
       </el-table-column>
       <el-table-column align="center"  prop="username" label="用户名" width="150">
       </el-table-column>
       <el-table-column align="center"  prop="nickname" label="昵称" min-width="150">
       </el-table-column>
-      <el-table-column align="center" prop="email" label="邮箱" min-width="300">
+      <el-table-column align="center" prop="email" label="邮箱" min-width="150">
       </el-table-column>
-      <el-table-column align="center" prop="isDelete" label="删除状态" width="100">
+      <el-table-column align="center" prop="isDelete" label="删除状态" width="150">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.isDelete==0?nshow:fshow" active-color="#13ce66" inactive-color="#ff4949" disabled>
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="roleList" label="角色列表" min-width="300">
+      <el-table-column align="center" prop="roleList" label="角色列表" min-width="150">
       </el-table-column>
             <el-table-column align="center"  prop="createTime" label="创建时间" min-width="150">
       </el-table-column>
             <el-table-column align="center"  prop="updateTime" label="更新时间" min-width="150">
       </el-table-column>
-            <el-table-column align="center" label="操作" min-width="300"> -->
+            <el-table-column align="center" label="操作" min-width="150"> -->
         <template slot-scope="scope">
           <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
           <!-- <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">删除</el-button> -->

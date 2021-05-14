@@ -21,7 +21,7 @@
   </el-menu>
 </template>
 <script>
-import { menu } from '../api/userMG'
+import { menuList } from '../api/request'
 export default {
   name: 'leftnav',
   data() {
@@ -33,99 +33,78 @@ export default {
   // 创建完毕状态(里面是操作)
   created() {
     // 获取图形验证码
-    let res = {
-      success: true,
-      data: [
-        {
-          "menuid": 1,
-          "menuname": "基础管理",
-          "menus": [
-            {
-              "menuid": 11,
-              "menuname": "设备管理",
-              "url": "base/device",
-            },{
-              "menuid": 12,
-              "menuname": "个人中心",
-              "url": "base/info",
-            }
-          ]
-        },
-        {
-          menuid: 2,
-          icon: 'li-icon-dingdanguanli',
-          menuname: '设备中心',
-          hasThird: null,
-          url: null,
-          menus: [
-            {
-              menuid: 21,
-              icon: 'el-icon-video-camera',
-              menuname: '实时监控',
-              hasThird: 'N',
-              url: 'play/realTime',
-              menus: null
-            }, {
-              menuid: 22,
-              icon: 'el-icon-video-camera',
-              menuname: '监控回放',
-              hasThird: 'N',
-              url: 'play/replay',
-              menus: null
-            }
-          ]
-        },
-        {
-          menuid: 71,
-          icon: 'li-icon-xitongguanli',
-          menuname: '系统管理',
-          hasThird: null,
-          url: null,
-          menus: [
-            {
-              menuid: 72,
-              icon: 'icon-cus-manage',
-              menuname: '用户管理',
-              hasThird: 'N',
-              url: 'system/user',
-              menus: null
-            },
-            {
-              menuid: 73,
-              icon: 'icon-news-manage',
-              menuname: '角色管理',
-              hasThird: 'N',
-              url: 'system/role',
-              menus: null
-            },
-            {
-              menuid: 76,
-              icon: 'icon-cms-manage',
-              menuname: '权限管理',
-              hasThird: 'N',
-              url: 'system/permission',
-              menus: null
-            }
-          ]
-        }
-      ],
-      msg: 'success'
-    }
-          this.allmenu = res.data
-    
-    // menu(localStorage.getItem('logintoken'))
-    //   .then(res => {
-    //     console.log(JSON.stringify(res))
-    //     if (res.success) {
-    //       this.allmenu = res.data
-    //     } else {
-    //       this.$message.error(res.msg)
-    //       return false
+    // let res = {
+    //   success: true,
+    //   data: [
+    //     {
+    //       "menuid": 1,
+    //       "menuname": "基础管理",
+    //       "menus": [
+    //         {
+    //           "menuid": 11,
+    //           "menuname": "设备管理",
+    //           "url": "base/device",
+    //         },{
+    //           "menuid": 12,
+    //           "menuname": "个人中心",
+    //           "url": "base/info",
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       "menuid": 2,
+    //       "menuname": "设备中心",
+    //       "menus": [
+    //         {
+    //           "menuid": 21,
+    //           "menuname": "实时监控",
+    //           "url": "play/realTime",
+    //         }, {
+    //           "menuid": 22,
+    //           "menuname": "监控回放",
+    //           "url": "play/replay",
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       "menuid": 71,
+    //       "menuname": "系统管理",
+    //       "menus": [
+    //         {
+    //           "menuid": 72,
+    //           "menuname": "用户管理",
+    //           "url": "system/user",
+    //         },
+    //         {
+    //           "menuid": 73,
+    //           "menuname": "角色管理",
+    //           "url": "system/role",
+    //         },
+    //         {
+    //           "menuid": 76,
+    //           "menuname": "权限管理",
+    //           "url": "system/permission",
+    //         }
+    //       ]
     //     }
-    //   })
-    //   .catch(err => {
-    //     this.$message.error('菜单加载失败，请稍后再试！')
-    //   })
+    //   ],
+    //   msg: 'success'
+    // }
+    //       this.allmenu = res.data
+    
+    menuList()
+      .then(res => {
+        console.log(JSON.stringify(res))
+        if (res.code == 0) {
+          this.allmenu = res.data
+        } else {
+          this.$message.error(res.msg)
+          return false
+        }
+      })
+      .catch(err => {
+        this.$message.error('菜单加载失败，请稍后再试！')
+      })
     // 监听
     this.$root.Bus.$on('toggle', value => {
       this.collapsed = !value

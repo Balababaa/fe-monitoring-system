@@ -25,13 +25,13 @@
       </el-table-column>
       <el-table-column align="center" prop="code" label="角色代码" width="150">
       </el-table-column>
-      <el-table-column align="center" prop="permissionList" label="权限列表" min-width="300">
+      <el-table-column align="center" prop="permissionList" label="权限列表" min-width="300" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column align="center" prop="createTime" label="创建时间" min-width="300">
+      <el-table-column align="center" prop="createTime" label="创建时间" min-width="150">
       </el-table-column>
       <el-table-column align="center" prop="creator" label="创建人" width="150">
       </el-table-column>
-      <el-table-column align="center" prop="updateTime" label="更新时间" min-width="300">
+      <el-table-column align="center" prop="updateTime" label="更新时间" min-width="150">
       </el-table-column>
       <el-table-column align="center" prop="modifier" label="修改人" width="150">
       </el-table-column>

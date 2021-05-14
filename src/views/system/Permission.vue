@@ -35,15 +35,15 @@
       </el-table-column>
       <el-table-column align="center" prop="type" label="权限类型" width="150">
       </el-table-column>
-      <el-table-column align="center" prop="path" label="路径" min-width="150" show-overflow-tooltip>
+      <el-table-column align="center" prop="path" label="菜单路径" min-width="150" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column align="center" prop="createTime" label="创建时间" min-width="300">
+      <el-table-column align="center" prop="createTime" label="创建时间" min-width="150">
       </el-table-column>
-      <el-table-column align="center" prop="creator" label="创建人" width="300">
+      <el-table-column align="center" prop="creator" label="创建人" width="150">
       </el-table-column>
-      <el-table-column align="center" prop="updateTime" label="更新时间" min-width="300">
+      <el-table-column align="center" prop="updateTime" label="更新时间" min-width="150">
       </el-table-column>
-      <el-table-column align="center" prop="modifier" label="修改人" width="300">
+      <el-table-column align="center" prop="modifier" label="修改人" width="150">
       </el-table-column>
       <!-- <el-table-column align="center" label="操作" min-width="300">
         <template slot-scope="scope">

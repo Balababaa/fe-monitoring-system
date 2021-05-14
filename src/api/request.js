@@ -68,3 +68,5 @@ export const permissionSave = (params) => { return post("/api/permission/save", 
 export const roleAdd  = (params) => { return post("/user/add", params) }
 
 export const permissionAdd  = (params) => { return post("/api/role/add", params) }
+
+export const menuList  = () => { return get("/api/auth/menu", {}) }
