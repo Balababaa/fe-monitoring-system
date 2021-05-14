@@ -12,10 +12,7 @@
     <el-form :inline="true" :model="formInline" class="user-search">
 
       <el-form-item label="搜索：">
-        <el-input size="small" v-model="formInline.roleName" placeholder="输入角色名称"></el-input>
-      </el-form-item>
-      <el-form-item label="">
-        <el-input size="small" v-model="formInline.roleNo" placeholder="输入角色代码"></el-input>
+        <el-input size="small" v-model="formInline.code" placeholder="输入角色代码"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
@@ -24,54 +21,48 @@
     </el-form>
     <!--列表-->
     <el-table size="small" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
-      <el-table-column align="center" type="selection" width="60">
+      <el-table-column align="center" prop="name" label="角色名称" width="150">
       </el-table-column>
-      <el-table-column sortable prop="roleName" label="角色名称" width="300">
+      <el-table-column align="center" prop="code" label="角色代码" width="150">
       </el-table-column>
-      <el-table-column sortable prop="roleNo" label="角色代码" width="300">
+      <el-table-column align="center" prop="permissionList" label="权限列表" min-width="300">
       </el-table-column>
-      <el-table-column sortable prop="editTime" label="修改时间" width="300">
-        <template slot-scope="scope">
-          <div>{{scope.row.editTime|timestampToTime}}</div>
-        </template>
+      <el-table-column align="center" prop="createTime" label="创建时间" min-width="300">
       </el-table-column>
-      <el-table-column sortable prop="editUser" label="修改人" width="300">
+      <el-table-column align="center" prop="creator" label="创建人" width="150">
+      </el-table-column>
+      <el-table-column align="center" prop="updateTime" label="更新时间" min-width="300">
+      </el-table-column>
+      <el-table-column align="center" prop="modifier" label="修改人" width="150">
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="300">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
-          <el-button size="mini" type="success" @click="menuAccess(scope.$index, scope.row)">菜单权限</el-button>
+          <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+          <!-- <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">删除</el-button> -->
+          <el-button size="mini" type="success" @click="editPermission(scope.$index, scope.row)">权限编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
     <!-- 编辑界面 -->
-    <el-dialog :title="title" :visible.sync="editFormVisible" width="30%" @click='closeDialog("edit")'>
-      <el-form label-width="120px" :model="editForm" ref="editForm" :rules="rules">
-        <el-form-item label="系统编码" prop="systemNo">
-          <el-input size="small" v-model="editForm.systemNo" auto-complete="off" placeholder="请输入系统编码"></el-input>
-        </el-form-item>
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input size="small" v-model="editForm.roleName" auto-complete="off" placeholder="请输入角色名称"></el-input>
-        </el-form-item>
-        <el-form-item label="角色代码" prop="roleNo">
-          <el-input size="small" v-model="editForm.roleNo" auto-complete="off" placeholder="请输入角色代码"></el-input>
+        <el-dialog title="权限编辑" :visible.sync="editPermissionFormVisible" width="30%" @click='closeDialog("edit")'>
+      <el-form label-width="120px" :model="editPermissionForm" ref="editPermissionForm" :rules="rules">
+        <el-form-item label="权限" prop="codeList">
+          <el-select v-model="editPermissionForm.codeList" multiple placeholder="请选择">
+            <el-option
+              v-for="item in permissionList"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code">
+            </el-option>
+          </el-select>
+
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click='closeDialog("edit")'>取消</el-button>
-        <el-button size="small" type="primary" :loading="loading" class="title" @click="submitForm('editForm')">保存</el-button>
-      </div>
-    </el-dialog>
-    <!-- 菜单权限 -->
-    <el-dialog title="菜单权限" :visible.sync="menuAccessshow" width="30%" @click='closeDialog("perm")'>
-      <el-tree ref="tree" default-expand-all="" :data="RoleRight" :props="RoleRightProps" :default-checked-keys="checkmenu" node-key="id" show-checkbox>
-      </el-tree>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click='closeDialog("perm")'>取消</el-button>
-        <el-button size="small" type="primary" :loading="loading" class="title" @click="menuPermSave">保存</el-button>
+        <el-button size="small" type="primary" :loading="loading" class="title" @click="submitEditPermissionForm('editPermissionForm')">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -81,11 +72,9 @@
 import {
   roleList,
   roleSave,
-  roleDelete,
-  rolePwd,
-  RoleRightTree,
-  RoleRightSave
-} from '../../api/userMG'
+  permissionListAll,
+  permissionAdd
+} from '../../api/request'
 import Pagination from '../../components/Pagination'
 export default {
   data() {
@@ -93,15 +82,14 @@ export default {
       nshow: true, //switch开启
       fshow: false, //switch关闭
       loading: false, //是显示加载
-      editFormVisible: false, //控制编辑页面显示与隐藏
-      menuAccessshow: false, //控制数据权限显示与隐藏
+      editPermissionFormVisible: false, 
       title: '添加',
       editForm: {
-        roleId: '',
-        systemNo: '',
-        roleNo: '',
-        roleName: '',
-        token: localStorage.getItem('logintoken')
+        name: '',
+        code: '',
+      },
+      addRoleForm: {
+        uid: '',
       },
       // rules 表单验证
       rules: {
@@ -118,9 +106,7 @@ export default {
       formInline: {
         page: 1,
         limit: 10,
-        varLable: '',
-        varName: '',
-        token: localStorage.getItem('logintoken')
+        code: '',
       },
       // 删除
       seletedata: {
@@ -144,6 +130,12 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 10
+      },
+
+      permissionList: [],
+      editPermissionForm: {
+        codeList: [],
+        roleId:''
       }
     }
   },
@@ -172,105 +164,29 @@ export default {
   methods: {
     // 获取角色列表
     getdata(parameter) {
-      // 模拟数据
-      let res = {
-        code: 0,
-        msg: null,
-        count: 6,
-        data: [
-          {
-            addUser: 'root',
-            editUser: 'root',
-            addTime: 1519182004000,
-            editTime: 1520288426000,
-            roleId: 1,
-            systemNo: 'pmd',
-            roleNo: 'Administrator',
-            roleName: '超级管理员'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1521111376000,
-            editTime: 1520678191000,
-            roleId: 2,
-            systemNo: 'order',
-            roleNo: 'admin',
-            roleName: '公司管理员'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1520678221000,
-            editTime: 1520678221000,
-            roleId: 95,
-            systemNo: 'pm',
-            roleNo: 'common',
-            roleName: '普通用户'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1526349853000,
-            editTime: 1526349853000,
-            roleId: 96,
-            systemNo: '1',
-            roleNo: '1',
-            roleName: '1'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1526349942000,
-            editTime: 1526437443000,
-            roleId: 97,
-            systemNo: '2',
-            roleNo: '2',
-            roleName: '2'
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1526652148000,
-            editTime: 1526652148000,
-            roleId: 101,
-            systemNo: 'test',
-            roleNo: 'demo',
-            roleName: '演示角色'
-          }
-        ]
-      }
-      this.loading = false
-      this.listData = res.data
-      // 分页赋值
-      this.pageparm.currentPage = this.formInline.page
-      this.pageparm.pageSize = this.formInline.limit
-      this.pageparm.total = res.count
-      // 模拟数据结束
-
       /***
        * 调用接口，注释上面模拟数据 取消下面注释
        */
-      // roleList(parameter)
-      //   .then(res => {
-      //     this.loading = false
-      //     if (res.success == false) {
-      //       this.$message({
-      //         type: 'info',
-      //         message: res.msg
-      //       })
-      //     } else {
-      //       this.listData = res.data
-      //       // 分页赋值
-      //       this.pageparm.currentPage = this.formInline.page
-      //       this.pageparm.pageSize = this.formInline.limit
-      //       this.pageparm.total = res.count
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.loading = false
-      //     this.$message.error('获取角色列表失败，请稍后再试！')
-      //   })
+      roleList(parameter)
+        .then(res => {
+          this.loading = false
+          if (res.code != 0) {
+            this.$message({
+              type: 'info',
+              message: res.msg
+            })
+          } else {
+            this.listData = res.data.dataList
+            // 分页赋值
+            this.pageparm.currentPage = this.formInline.page
+            this.pageparm.pageSize = this.formInline.limit
+            this.pageparm.total = res.data.total
+          }
+        })
+        .catch(err => {
+          this.loading = false
+          this.$message.error('获取角色列表失败，请稍后再试！')
+        })
     },
     // 分页插件事件
     callFather(parm) {
@@ -307,7 +223,7 @@ export default {
             .then(res => {
               this.editFormVisible = false
               this.loading = false
-              if (res.success) {
+              if (res.code == 0) {
                 this.getdata(this.formInline)
                 this.$message({
                   type: 'success',
@@ -389,6 +305,15 @@ export default {
           this.loading = false
           this.$message.error('获取权限失败，请稍后再试！')
         })
+    },
+
+    handleRole: function(index, row){
+      this.addRoleFormVisible = true;
+
+
+    },
+    submitAddRoleForm: function(addRole){
+        console.log(addRole)
     },
     // 选中菜单
     changemenu(arr) {
@@ -478,13 +403,47 @@ export default {
     },
     // 关闭编辑、增加弹出框
     closeDialog(dialog) {
-      if (dialog == 'edit') {
-        this.editFormVisible = false
-      } else if (dialog == 'perm') {
-        this.menuAccessshow = false
-      }
+      this.editPermissionFormVisible = false
+    },  
+    editPermission: function(index, row){
+      this.editPermissionFormVisible = true
+      this.editPermissionForm.roleId = row.id
+      permissionListAll().then(res =>{
+        if (res.code===0) {
+          this.permissionList = res.data
+        } else {
+          this.$message({
+            type: 'info',
+            message: res.msg
+          })
+        }
+      })
+    },
+    submitEditPermissionForm: function(editPermissionForm){
+       permissionAdd(this.editPermissionForm)
+      .then(res => {
+        this.editPermissionFormVisible = false
+        if (res.code===0) {
+          this.getdata(this.formInline)
+          this.$message({
+            type: 'success',
+            message: '数据保存成功！'
+          })
+        } else {
+          this.$message({
+            type: 'info',
+            message: res.msg
+          })
+        }
+        this.editPermissionForm = {};
+      })
+      .catch(err => {
+        this.editPermissionFormVisible = false
+        this.$message.error('保存失败，请稍后再试！')
+        this.editPermissionForm = {};
+      }) 
     }
-  }
+  },
 }
 </script>
 

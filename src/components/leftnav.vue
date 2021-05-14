@@ -37,26 +37,17 @@ export default {
       success: true,
       data: [
         {
-          menuid: 1,
-          icon: 'li-icon-xiangmuguanli',
-          menuname: '基础管理',
-          hasThird: null,
-          url: null,
-          menus: [
+          "menuid": 1,
+          "menuname": "基础管理",
+          "menus": [
             {
-              menuid: 11,
-              icon: 'el-icon-video-camera',
-              menuname: '设备管理',
-              hasThird: 'N',
-              url: 'base/device',
-              menus: null
+              "menuid": 11,
+              "menuname": "设备管理",
+              "url": "base/device",
             },{
-              menuid: 12,
-              icon: 'el-icon-video-camera',
-              menuname: '个人中心',
-              hasThird: 'N',
-              url: 'base/info',
-              menus: null
+              "menuid": 12,
+              "menuname": "个人中心",
+              "url": "base/info",
             }
           ]
         },

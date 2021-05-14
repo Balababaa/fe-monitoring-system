@@ -48,3 +48,23 @@ export function innerDownload(data, fileName) {
         navigator.msSaveBlob(blob, fileName)
     }
 }
+
+export const userList = (params) => { return get("/user/list", params) }
+
+export const roleList = (params) => { return get("/api/role/list", params) }
+
+export const roleListAll = (params) => { return get("/api/role/list_all", params) }
+
+export const permissionList = (params) => { return get("/api/permission/list", params) }
+
+export const permissionListAll = (params) => { return get("/api/permission/list_all", params) }
+
+export const userSave  = (params) => { return post("/user/save", params) }
+
+export const roleSave  = (params) => { return post("/api/role/save", params) }
+
+export const permissionSave = (params) => { return post("/api/permission/save", params) }
+
+export const roleAdd  = (params) => { return post("/user/add", params) }
+
+export const permissionAdd  = (params) => { return post("/api/role/add", params) }

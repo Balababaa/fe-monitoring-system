@@ -11,55 +11,66 @@
     <!-- 搜索筛选 -->
     <el-form :inline="true" :model="formInline" class="user-search">
       <el-form-item label="搜索：">
-        <el-input size="small" v-model="formInline.permissionName" placeholder="输入权限名称"></el-input>
+        <el-input size="small" v-model="formInline.code" placeholder="输入权限CODE"></el-input>
       </el-form-item>
-      <el-form-item label="">
-        <el-input size="small" v-model="formInline.permission" placeholder="输入权限CODE"></el-input>
-      </el-form-item>
-      <el-form-item label="角色：">
+      <!-- <el-form-item label="角色：">
         <el-select size="small" v-model="formInline.roleId" placeholder="请选择">
           <el-option selected label="请选择" value="0"></el-option>
           <el-option v-for="parm in userparm" :key="parm.roleId" :label="parm.roleName" :value="parm.roleId"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button size="small" type="primary" icon="el-icon-search" @click="search">搜索</el-button>
         <el-button size="small" type="primary" icon="el-icon-plus" @click="handleEdit()">添加</el-button>
-        <el-button size="small" type="primary" icon="el-icon-plus" @click="RolePermission()">配置权限</el-button>
+        <!-- <el-button size="small" type="primary" icon="el-icon-plus" @click="RolePermission()">配置权限</el-button> -->
       </el-form-item>
     </el-form>
     <!--列表-->
     <el-table size="small" @selection-change="selectChange" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
       <el-table-column align="center" type="selection" width="60">
       </el-table-column>
-      <el-table-column sortable prop="permissionName" label="权限名称" width="300">
+      <el-table-column align="center" prop="name" label="权限名称" width="150">
       </el-table-column>
-      <el-table-column sortable prop="permission" label="权限CODE" width="300">
+      <el-table-column align="center" prop="code" label="权限CODE" width="150">
       </el-table-column>
-      <el-table-column sortable prop="editTime" label="修改时间" width="300">
-        <template slot-scope="scope">
-          <div>{{scope.row.editTime|timestampToTime}}</div>
-        </template>
+      <el-table-column align="center" prop="type" label="权限类型" width="150">
       </el-table-column>
-      <el-table-column sortable prop="editUser" label="修改人" width="300">
+      <el-table-column align="center" prop="path" label="路径" min-width="150" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column align="center" label="操作" min-width="300">
+      <el-table-column align="center" prop="createTime" label="创建时间" min-width="300">
+      </el-table-column>
+      <el-table-column align="center" prop="creator" label="创建人" width="300">
+      </el-table-column>
+      <el-table-column align="center" prop="updateTime" label="更新时间" min-width="300">
+      </el-table-column>
+      <el-table-column align="center" prop="modifier" label="修改人" width="300">
+      </el-table-column>
+      <!-- <el-table-column align="center" label="操作" min-width="300">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
     <!-- 编辑界面 -->
     <el-dialog :title="title" :visible.sync="editFormVisible" width="30%" @click="closeDialog">
       <el-form label-width="120px" :model="editForm" :rules="rules" ref="editForm">
-        <el-form-item label="权限名称" prop="permissionName">
-          <el-input size="small" v-model="editForm.permissionName" auto-complete="off" placeholder="权限名称"></el-input>
+        <el-form-item label="权限名称" prop="name">
+          <el-input size="small" v-model="editForm.name" auto-complete="off" placeholder="权限名称"></el-input>
         </el-form-item>
-        <el-form-item label="权限CODE" prop="permission">
-          <el-input size="small" v-model="editForm.permission" auto-complete="off" placeholder="权限CODE"></el-input>
+        <el-form-item label="权限CODE" prop="code">
+          <el-input size="small" v-model="editForm.code" auto-complete="off" placeholder="权限CODE"></el-input>
+        </el-form-item>
+        <el-form-item label="权限类型" prop="type">
+          <el-select size="small" v-model="editForm.type" placeholder="请选择">
+            <el-option label="功能权限" value="1"></el-option>
+            <el-option label="菜单权限" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="路径" prop="path">
+          <el-input size="small" v-model="editForm.path" auto-complete="off" placeholder="权限PATH"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -73,11 +84,11 @@
 <script>
 import {
   permissionList,
-  ermissionSave,
-  ermissionDelete,
-  roleDropDown,
-  RolePermission
-} from '../../api/userMG'
+  permissionSave,
+  // ermissionDelete,
+  // roleDropDown,
+  // RolePermission
+} from '../../api/request'
 import Pagination from '../../components/Pagination'
 export default {
   data() {
@@ -88,10 +99,10 @@ export default {
       editFormVisible: false, //控制编辑页面显示与隐藏
       title: '添加',
       editForm: {
-        permissionId: '',
-        permissionName: '',
-        permission: '',
-        token: localStorage.getItem('logintoken')
+        code: '',
+        name: '',
+        type: '',
+        path: ''
       },
       // rules表单验证
       rules: {
@@ -105,10 +116,7 @@ export default {
       formInline: {
         page: 1,
         limit: 10,
-        permissionName: '',
-        permission: '',
-        roleId: '0',
-        token: localStorage.getItem('logintoken')
+        code: '',
       },
       // 选择数据
       selectdata: [],
@@ -138,7 +146,7 @@ export default {
 
   created() {
     this.getdata(this.formInline)
-    this.getAccsee()
+    // this.getAccsee()
   },
 
   /**
@@ -149,145 +157,30 @@ export default {
     // 获取数据方法
     getdata(parameter) {
       this.loading = true
-      // 模拟数据
-      let res = {
-        code: 0,
-        msg: null,
-        count: 0,
-        data: [
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1519728609000,
-            editTime: 1522585700000,
-            permissionId: 1,
-            permissionName: '用户-列表',
-            permission: 'system:User:list',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1519728667000,
-            editTime: 1522585706000,
-            permissionId: 3,
-            permissionName: '用户-修改',
-            permission: 'system:User:save',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: null,
-            editUser: null,
-            addTime: 1519728669000,
-            editTime: 1522256096000,
-            permissionId: 4,
-            permissionName: '用户-删除',
-            permission: 'system:User:delete',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: 'root',
-            editUser: 'root',
-            addTime: 1520249365000,
-            editTime: 1522256085000,
-            permissionId: 5,
-            permissionName: '系统管理:角色:列表',
-            permission: 'system:Role:list',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: 'root',
-            editUser: 'root',
-            addTime: 1520249588000,
-            editTime: 1520249588000,
-            permissionId: 7,
-            permissionName: 'system:Role:save',
-            permission: 'system:Role:save',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: 'root',
-            editUser: 'root',
-            addTime: 1520249588000,
-            editTime: 1520249588000,
-            permissionId: 8,
-            permissionName: 'system:Role:delete',
-            permission: 'system:Role:delete',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: 'root',
-            editUser: 'root',
-            addTime: 1520251014000,
-            editTime: 1520251014000,
-            permissionId: 9,
-            permissionName: 'system:Variable:列表',
-            permission: 'system:Variable:list',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: 'root',
-            editUser: 'root',
-            addTime: 1520251014000,
-            editTime: 1520251014000,
-            permissionId: 11,
-            permissionName: 'system:Variable:修改',
-            permission: 'system:Variable:save',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          },
-          {
-            addUser: 'root',
-            editUser: 'root',
-            addTime: 1520251014000,
-            editTime: 1520251014000,
-            permissionId: 12,
-            permissionName: 'system:Variable:删除',
-            permission: 'system:Variable:delete',
-            lay_CHECKED: false,
-            LAY_CHECKED: false
-          }
-        ]
-      }
-      this.loading = false
-      this.listData = res.data
-      // 分页赋值
-      this.pageparm.currentPage = this.formInline.page
-      this.pageparm.pageSize = this.formInline.limit
-      this.pageparm.total = res.count
-      // 模拟数据结束
-
       /***
        * 调用接口，注释上面模拟数据 取消下面注释
        */
       // 获取权限列表
-      // permissionList(parameter)
-      //   .then(res => {
-      //     this.loading = false
-      //     if (res.success == false) {
-      //       this.$message({
-      //         type: 'info',
-      //         message: res.msg
-      //       })
-      //     } else {
-      //       this.listData = res.data
-      //       // 分页赋值
-      //       this.pageparm.currentPage = this.formInline.page
-      //       this.pageparm.pageSize = this.formInline.limit
-      //       this.pageparm.total = res.count
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.loading = false
-      //     this.$message.error('权限管理列表获取失败，请稍后再试！')
-      //   })
+      permissionList(parameter)
+        .then(res => {
+          this.loading = false
+          if (res.code != 0) {
+            this.$message({
+              type: 'info',
+              message: res.msg
+            })
+          } else {
+            this.listData = res.data.dataList
+            // 分页赋值
+            this.pageparm.currentPage = this.formInline.page
+            this.pageparm.pageSize = this.formInline.limit
+            this.pageparm.total = res.data.total
+          }
+        })
+        .catch(err => {
+          this.loading = false
+          this.$message.error('权限管理列表获取失败，请稍后再试！')
+        })
     },
     // 获取权限
     getAccsee() {
@@ -337,11 +230,11 @@ export default {
     submitForm(editData) {
       this.$refs[editData].validate(valid => {
         if (valid) {
-          ermissionSave(this.editForm)
+          permissionSave(this.editForm)
             .then(res => {
               this.editFormVisible = false
               this.loading = false
-              if (res.success) {
+              if (res.code == 0) {
                 this.getdata(this.formInline)
                 this.$message({
                   type: 'success',
@@ -353,8 +246,10 @@ export default {
                   message: res.msg
                 })
               }
+              this.editForm = {}
             })
             .catch(err => {
+              this.editForm = {}
               this.editFormVisible = false
               this.loading = false
               this.$message.error('权限管理保存失败，请稍后再试！')

@@ -30,7 +30,7 @@
 
     <!--列表-->
     <el-table size="small" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
-      <el-table-column  align="center" prop="fileName" label="文件名称" min-width="300" />
+      <el-table-column  align="center" prop="fileName" label="文件名称" width="300" />
       <el-table-column  align="center" prop="fileSize" label="文件大小" width="150" />
       <el-table-column  align="center" prop="startTime" label="开始时间" width="150" />
       <el-table-column  align="center" prop="endTime" label="结束时间" width="150" />
