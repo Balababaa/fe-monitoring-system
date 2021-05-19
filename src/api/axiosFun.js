@@ -68,7 +68,7 @@ const get = (uri, params) => {
 const download = (uri, params) => {
     return axios.get(uri, {
         'params' : params,
-        'baseURL': 'http://192.168.18.107:8808',
+        // 'baseURL': 'http://192.168.18.103:8808',
         'headers' : {
             login_token: localStorage.getItem('login_token')
         },
