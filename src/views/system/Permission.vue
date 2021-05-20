@@ -53,7 +53,7 @@
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
     <!-- 编辑界面 -->
-    <el-dialog :title="title" :visible.sync="editFormVisible" width="30%" @click="closeDialog">
+    <el-dialog title="添加权限" :visible.sync="editFormVisible" width="30%" @click="closeDialog">
       <el-form label-width="120px" :model="editForm" :rules="rules" ref="editForm">
         <el-form-item label="权限名称" prop="name">
           <el-input size="small" v-model="editForm.name" auto-complete="off" placeholder="权限名称"></el-input>
@@ -72,7 +72,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="closeDialog">取消</el-button>
+        <!-- <el-button size="small" @click="closeDialog">取消</el-button> -->
         <el-button size="small" type="primary" :loading="loading" class="title" @click="submitForm('editForm')">保存</el-button>
       </div>
     </el-dialog>
@@ -104,11 +104,14 @@ export default {
       },
       // rules表单验证
       rules: {
-        permissionName: [
+        name: [
           { required: true, message: '请输入权限名称', trigger: 'blur' }
         ],
-        permission: [
+        code: [
           { required: true, message: '请输入权限CODE', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请输入权限类型', trigger: 'blur' }
         ]
       },
       formInline: {
@@ -340,6 +343,7 @@ export default {
     },
     // 关闭编辑、增加弹出框
     closeDialog() {
+      console.log("close")
       this.editFormVisible = false
     }
   }

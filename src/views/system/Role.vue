@@ -45,6 +45,23 @@
     </el-table>
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
+
+    <!-- 编辑界面 -->
+    <el-dialog title="添加角色" :visible.sync="editFormVisible" width="30%" @click="closeDialog">
+      <el-form label-width="120px" :model="editForm" :rules="rules" ref="editForm">
+        <el-form-item label="角色名称" prop="name">
+          <el-input size="small" v-model="editForm.name" auto-complete="off" placeholder="权限名称"></el-input>
+        </el-form-item>
+        <el-form-item label="角色CODE" prop="code">
+          <el-input size="small" v-model="editForm.code" auto-complete="off" placeholder="权限CODE"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <!-- <el-button size="small" @click="closeDialog">取消</el-button> -->
+        <el-button size="small" type="primary" :loading="loading" class="title" @click="submitForm('editForm')">保存</el-button>
+      </div>
+    </el-dialog>
+
     <!-- 编辑界面 -->
         <el-dialog title="权限编辑" :visible.sync="editPermissionFormVisible" width="30%" @click='closeDialog("edit")'>
       <el-form label-width="120px" :model="editPermissionForm" ref="editPermissionForm" :rules="rules">
@@ -61,7 +78,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click='closeDialog("edit")'>取消</el-button>
+        <!-- <el-button size="small" @click='closeDialog("edit")'>取消</el-button> -->
         <el-button size="small" type="primary" :loading="loading" class="title" @click="submitEditPermissionForm('editPermissionForm')">保存</el-button>
       </div>
     </el-dialog>
@@ -82,6 +99,7 @@ export default {
       nshow: true, //switch开启
       fshow: false, //switch关闭
       loading: false, //是显示加载
+      editFormVisible: false,
       editPermissionFormVisible: false, 
       title: '添加',
       editForm: {
@@ -93,13 +111,10 @@ export default {
       },
       // rules 表单验证
       rules: {
-        systemNo: [
-          { required: true, message: '请输入系统编码', trigger: 'blur' }
-        ],
-        roleNo: [
+        code: [
           { required: true, message: '请输入角色代码', trigger: 'blur' }
         ],
-        roleName: [
+        name: [
           { required: true, message: '请输入角色名称', trigger: 'blur' }
         ]
       },
@@ -201,19 +216,6 @@ export default {
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true
-      if (row != undefined && row != 'undefined') {
-        this.title = '修改'
-        this.editForm.roleId = row.roleId
-        this.editForm.systemNo = row.systemNo
-        this.editForm.roleNo = row.roleNo
-        this.editForm.roleName = row.roleName
-      } else {
-        this.title = '添加'
-        this.editForm.roleId = ''
-        this.editForm.systemNo = ''
-        this.editForm.roleNo = ''
-        this.editForm.roleName = ''
-      }
     },
     // 编辑、增加页面保存方法
     submitForm(editData) {
@@ -235,8 +237,10 @@ export default {
                   message: res.msg
                 })
               }
+              this.editForm = {}
             })
             .catch(err => {
+              this.editForm = {}
               this.editFormVisible = false
               this.loading = false
               this.$message.error('角色保存失败，请稍后再试！')
