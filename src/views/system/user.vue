@@ -67,13 +67,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click='closeDialog("edit")'>取消</el-button>
+        <!-- <el-button size="small" @click='closeDialog("edit")'>取消</el-button> -->
         <el-button size="small" type="primary" :loading="loading" class="title" @click="submitAddRoleForm('addRoleForm')">保存</el-button>
       </div>
     </el-dialog>
 
 
-    <!-- 编辑界面
     <el-dialog :title="title" :visible.sync="editFormVisible" width="30%" @click='closeDialog("edit")'>
       <el-form label-width="80px" ref="editForm" :model="editForm" :rules="rules">
         <el-form-item label="UID" prop="uid">
@@ -90,10 +89,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click='closeDialog("edit")'>取消</el-button>
+        <!-- <el-button size="small" @click='closeDialog("edit")'>取消</el-button> -->
         <el-button size="small" type="primary" :loading="loading" class="title" @click="submitForm('editForm')">保存</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -129,23 +128,16 @@ export default {
       selectdata: [],
       // rules表单验证
       rules: {
-        userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
+        uid: [
+          { required: true, message: '请输入UID', trigger: 'blur' }
         ],
-        userRealName: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
+        username: [
+          { required: true, message: '请输入姓用户名', trigger: 'blur' }
         ],
-        roleId: [{ required: true, message: '请选择角色', trigger: 'blur' }],
-        userMobile: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          {
-            pattern: /^1(3\d|47|5((?!4)\d)|7(0|1|[6-8])|8\d)\d{8,8}$/,
-            required: true,
-            message: '请输入正确的手机号',
-            trigger: 'blur'
-          }
+        nickname: [
+          { required: true, message: '请输入昵称', trigger: 'blur' }
         ],
-        userEmail: [
+        email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           {
             pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
@@ -153,8 +145,7 @@ export default {
             message: '请输入正确的邮箱',
             trigger: 'blur'
           }
-        ],
-        userSex: [{ required: true, message: '请选择性别', trigger: 'blur' }]
+        ]
       },
       // 删除用户
       seletedata: {
