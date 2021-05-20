@@ -178,7 +178,7 @@ export default {
           try{
             this.flvPlayer = flvjs.createPlayer({
                 type: 'video/mp4',
-                url: `http://localhost:8080/api/video/file/play/${row.fileName}`,
+                url: `http://localhost:8888/api/video/file/play/${row.fileName}`,
                 // url: `http://192.168.18.103:8808/api/video/file/play/${row.fileName}`
             });
             var videoElement = document.getElementById('videoElement');
