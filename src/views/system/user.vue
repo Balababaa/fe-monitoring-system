@@ -28,12 +28,12 @@
       </el-table-column>
       <el-table-column align="center" prop="email" label="邮箱" min-width="150">
       </el-table-column>
-      <el-table-column align="center" prop="isDelete" label="删除状态" width="150">
+      <!-- <el-table-column align="center" prop="isDelete" label="删除状态" width="150">
         <template slot-scope="scope">
           <el-switch v-model="scope.row.isDelete==0?nshow:fshow" active-color="#13ce66" inactive-color="#ff4949" disabled>
           </el-switch>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column align="center" prop="roleList" label="角色列表" min-width="150">
       </el-table-column>
             <el-table-column align="center"  prop="createTime" label="创建时间" min-width="150">

@@ -26,7 +26,7 @@
     <!--列表-->
     <el-table size="small" :data="listData" highlight-current-row v-loading="loading" border element-loading-text="拼命加载中" style="width: 100%;">
       <el-table-column align="center" prop="deviceName" label="设备名称" width="150" />
-      <el-table-column align="center" prop="deviceType" label="设备类型" width="100" />
+      <el-table-column align="center" prop="deviceTypeStr" label="设备类型" width="100" />
       <el-table-column align="center" prop="httpFlvUrl" label="设备地址" width="800" />
       <el-table-column align="center" prop="isDelete" label="是否删除" min-width="100">
         <template slot-scope="scope">
@@ -53,7 +53,7 @@
           <el-input size="small" v-model="editForm.deviceName" auto-complete="off" placeholder="请输入设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备类型" prop="deviceType">
-            <el-select size="small" v-model="editForm.deviceType" placeholder="请选择">
+            <el-select size="small" v-model="editForm.deviceTypeStr" placeholder="请选择">
             <el-option label="厨房" value="1"></el-option>
             <el-option label="客厅" value="2"></el-option>
             <el-option label="卧室" value="3"></el-option>
@@ -86,6 +86,7 @@ export default {
         id: undefined,
         deviceName: '',
         deviceType: '',
+        deviceTypeStr: '',
         httpFlvUrl: '',
       },
       // rules表单验证
@@ -93,7 +94,7 @@ export default {
         deviceName: [
           { required: true, message: '请输入设备名称', trigger: 'blur' }
         ],
-        deviceType: [
+        deviceTypeStr: [
           { required: true, message: '请输入设备类型', trigger: 'blur' }
         ],
         httpFlvUrl: [
@@ -171,6 +172,7 @@ export default {
         this.editForm.id = row.id
         this.editForm.deviceName = row.deviceName
         this.editForm.deviceType = row.deviceType
+        this.editForm.deviceTypeStr = row.deviceTypeStr
         this.editForm.httpFlvUrl = row.httpFlvUrl
       } else {
         this.title = '添加'
@@ -184,6 +186,20 @@ export default {
     submitForm(editData) {
       this.$refs[editData].validate(valid => {
         if (valid) {
+          if(this.editForm.deviceTypeStr =='厨房'){
+            this.editForm.deviceType = 1
+          }
+          if(this.editForm.deviceTypeStr =='客厅'){
+            this.editForm.deviceType = 2
+          }
+          if(this.editForm.deviceTypeStr =='卧室'){
+            this.editForm.deviceType = 3
+          }
+
+          if(!isNaN(parseInt(this.editForm.deviceTypeStr))){
+            this.editForm.deviceType = this.editForm.deviceTypeStr
+          }
+
           deviceSaveAPI(this.editForm)
             .then(res => {
               this.editFormVisible = false
