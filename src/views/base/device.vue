@@ -64,7 +64,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="closeDialog">取消</el-button>
+        <!-- <el-button size="small" @click="closeDialog">取消</el-button> -->
         <el-button size="small" type="primary" :loading="loading" class="title" @click="submitForm('editForm')">保存</el-button>
       </div>
     </el-dialog>
